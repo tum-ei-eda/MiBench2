@@ -20,6 +20,8 @@
 
 #include "crc.h"
 
+static unsigned addr = 0x180000;
+
 int main(void) {
   unsigned char test[] = "123456789";
 
@@ -30,7 +32,8 @@ int main(void) {
   printf("The crcSlow() of \"123456789\" is 0x%X\n",
          crcSlow(test, strlen(test)));
 #else
-  *(volatile int *)(0xe000) = (int)crcSlow(test, strlen(test));
+  *(volatile int *)(addr) = (int)crcSlow(test, strlen(test));
+  addr += 4;
 #endif
 
   /*
@@ -42,7 +45,8 @@ int main(void) {
   printf("The crcFast() of \"123456789\" is 0x%X\n",
          crcFast(test, strlen(test)));
 #else
-  *(volatile int *)(0xe004) = (int)crcFast(test, strlen(test));
+  *(volatile int *)(addr) = (int)crcFast(test, strlen(test));
+  addr += 4;
 #endif
 
   return 0;

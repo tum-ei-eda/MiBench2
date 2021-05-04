@@ -29,7 +29,7 @@ int main() {
     return 0;
 }
 
-static unsigned addr = 0x200000;
+static unsigned addr = 0x180000;
 
 int old_main() {
 	unsigned i,j;

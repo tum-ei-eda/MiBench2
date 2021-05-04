@@ -4,9 +4,8 @@ __DYNAMIC  =  0;
 MEMORY
 {
     instrram    : ORIGIN = 0x00000000, LENGTH = 0x100000
-    rom     	: ORIGIN = 0x100000, LENGTH = 0xFC000
-    stack   	: ORIGIN = 0x1FC000, LENGTH = 0x4000
-    out 		: ORIGIN = 0x200000, LENGTH = 0x100000
+    rom     	  : ORIGIN = 0x100000, LENGTH = 0xFC000
+    stack   	  : ORIGIN = 0x1FC000, LENGTH = 0x4000
 }
 /* ENTRY(_start) */
 /* Stack information variables */
@@ -87,11 +86,6 @@ SECTIONS
         stack = . ;
         _stack = . ;
     } > stack
-
-	.benchresults : {
-        benchresults = . ;
-        _benchresults = . ;
-    } > out
 
     .stab  0 (NOLOAD) :
     {
