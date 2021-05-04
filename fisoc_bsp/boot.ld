@@ -3,10 +3,10 @@ __DYNAMIC  =  0;
 
 MEMORY
 {
-    instrram    : ORIGIN = 0x00000000, LENGTH = 0x8000
-    rom     	: ORIGIN = 0x00008000, LENGTH = 0x2000
-    stack   	: ORIGIN = 0x0000A000, LENGTH = 0x4000
-    out 		: ORIGIN = 0x0000E000, LENGTH = 0x2000
+    instrram    : ORIGIN = 0x00000000, LENGTH = 0x100000
+    rom     	: ORIGIN = 0x100000, LENGTH = 0xFC000
+    stack   	: ORIGIN = 0x1FC000, LENGTH = 0x4000
+    out 		: ORIGIN = 0x200000, LENGTH = 0x100000
 }
 /* ENTRY(_start) */
 /* Stack information variables */
@@ -103,3 +103,4 @@ SECTIONS
         [ .stabstr ]
     }
 }
+

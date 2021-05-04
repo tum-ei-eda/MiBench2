@@ -1,4 +1,7 @@
+
+#ifndef FISOC
 #include <stdio.h>
+#endif
 #include <stdlib.h>
 #include <math.h>
 #include "fourier.h"
@@ -20,11 +23,13 @@ int old_main();
 int main() {
     MAXSIZE = 128;
     old_main();
-    invfft = 1;
+/*    invfft = 1;
     MAXSIZE = 256;
-    old_main();
+    old_main();*/
     return 0;
 }
+
+static unsigned addr = 0x200000;
 
 int old_main() {
 	unsigned i,j;
@@ -82,6 +87,7 @@ int old_main() {
  /* regular*/
  fft_float (MAXSIZE,invfft,RealIn,ImagIn,RealOut,ImagOut);
  
+#ifndef FISOC 
  printf("RealOut:\n");
  for (i=0;i<MAXSIZE;i++)
    printf("%f \t", RealOut[i]);
@@ -91,6 +97,16 @@ printf("ImagOut:\n");
  for (i=0;i<MAXSIZE;i++)
    printf("%f \t", ImagOut[i]);
    printf("\n");
+#else
+  for (i=0; i<MAXSIZE;i++) {
+    *(volatile float *)(addr) = RealOut[i];
+    addr += 4;
+  }
+  for (i=0; i<MAXSIZE;i++) {
+    *(volatile float *)(addr) = ImagOut[i];
+    addr += 4;
+  }
+#endif   
 
 /* free(RealIn);
  free(ImagIn);

@@ -19,6 +19,9 @@ int CDECL bit_count(long x)
         return(n);
 }
 
+
+
+
 #ifdef TEST
 
 #include <stdlib.h>

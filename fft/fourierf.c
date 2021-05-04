@@ -18,7 +18,9 @@
 ============================================================================*/
 
 #include <stdlib.h>
+#ifndef FISOC
 #include <stdio.h>
+#endif
 #include <math.h>
 
 #include "fourier.h"
@@ -30,7 +32,9 @@ static void CheckPointer ( void *p, char *name )
 {
     if ( p == NULL )
     {
+      #ifndef FISOC
         fprintf ( stderr, "Error in fft_float():  %s == NULL\n", name );
+      #endif
         exit(1);
     }
 }
@@ -53,10 +57,12 @@ void fft_float (
 
     if ( !IsPowerOfTwo(NumSamples) )
     {
+      #ifndef FISOC
         fprintf (
             stderr,
             "Error in fft():  NumSamples=%u is not power of two\n",
             NumSamples );
+      #endif
 
         exit(1);
     }

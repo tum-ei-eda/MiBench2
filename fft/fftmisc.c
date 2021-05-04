@@ -21,7 +21,9 @@
 ============================================================================*/
 
 #include <stdlib.h>
+#ifndef FISOC
 #include <stdio.h>
+#endif
 #include <math.h>
 
 #include "fourier.h"
@@ -50,10 +52,12 @@ unsigned NumberOfBitsNeeded ( unsigned PowerOfTwo )
 
     if ( PowerOfTwo < 2 )
     {
+      #ifndef FISOC
         fprintf (
             stderr,
             ">>> Error in fftmisc.c: argument %d to NumberOfBitsNeeded is too small.\n",
             PowerOfTwo );
+      #endif
 
         exit(1);
     }

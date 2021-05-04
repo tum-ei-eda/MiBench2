@@ -58,7 +58,7 @@ main_entry:
   jal x1, main
 
 main_end:
-  jal x1, main_end
+  ebreak
 
   .section .vectors, "ax"
   .option norvc;
