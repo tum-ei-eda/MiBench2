@@ -2,7 +2,12 @@
 #include "../bareBench.h"
 #include "input.h"
 
-#define NUM_NODES                          100
+#ifndef FISOC
+#include <stdio.h>
+#endif
+
+
+#define NUM_NODES                          10
 #define NONE                               9999
 
 struct _NODE
@@ -21,7 +26,7 @@ struct _QITEM
 };
 typedef struct _QITEM QITEM;
 
-QITEM allocated[100];
+QITEM allocated[1000];
 QITEM *qHead = NULL;
 
 int g_qCount = 0;
@@ -31,19 +36,19 @@ int iPrev, iNode;
 int i, iCost, iDist;
 
 
+
 void print_path (NODE *rgnNodes, int chNode)
 {
   if (rgnNodes[chNode].iPrev != NONE)
     {
       print_path(rgnNodes, rgnNodes[chNode].iPrev);
     }
-  //printf (" %d", chNode);
-  fflush(stdout);
 }
 
 void enqueue (int iNode, int iDist, int iPrev)
-{
-  static int notAll = 0;
+{ 
+  static int notAll = 0;  
+    
   QITEM *qNew = &allocated[notAll];
   notAll++;
   QITEM *qLast = qHead;
@@ -131,25 +136,27 @@ int dijkstra(int chStart, int chEnd)
 	    }
 	}
       
-      //printf("Shortest path is %d in cost. ", rgnNodes[chEnd].iDist);
-      //printf("Path is: ");
-      //print_path(rgnNodes, chEnd);
-      //printf("\n");
     }
-    return 0;
+    return rgnNodes[chEnd].iDist;
 }
 
 int main(int argc, char *argv[]) {
   int i,j;
-  initLED();
-  LED(1);
+
    /* make a fully connected matrix */
    // see input.h
   /* finds 10 shortest paths between nodes */
+  int result = 0;
   for (i=0,j=NUM_NODES/2;i<NUM_NODES;i++,j++) {
 			j=j%NUM_NODES;
-      dijkstra(i,j);
+      result ^= dijkstra(i,j);
   }
-  LED(1);
+
+  #ifndef FISOC
+  printf("%d\n", result);
+  #else
+  *(volatile int *)(0x180000) = result;
+  #endif
+  
   return 0;
 }

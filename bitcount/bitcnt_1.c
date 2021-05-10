@@ -19,28 +19,31 @@ int CDECL bit_count(long x)
         return(n);
 }
 
-
-
+#define TEST
 
 #ifdef TEST
 
 #include <stdlib.h>
-#include "snip_str.h"               /* For plural_text() macro    */
 
-main(int argc, char *argv[])
+
+int main()
 {
-      long n;
-
-      while(--argc)
-      {
-            int i;
-
-            n = atol(*++argv);
-            i = bit_count(n);
-            printf("%ld contains %d bit%s set\n",
-                  n, i, plural_text(i));
-      }
-      return 0;
+  unsigned iterations = 10000;
+  long n = 0xDEADBEEF;
+  
+  int result = 0;
+  for (int i=0; i<iterations; ++i) {
+    result += i;
+    result ^= bit_count(n);
+  }
+  
+  #ifndef FISOC
+  printf("result: %d\n", result);
+  #else
+  *(volatile int *)(0x180000) = result;
+  #endif
+  return 0;
 }
+
 
 #endif /* TEST */
