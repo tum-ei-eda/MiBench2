@@ -68,7 +68,9 @@ char *strsearch(const char *string)
       return NULL;
 }
 
+#ifndef FISOC
 #include <stdio.h>
+#endif
 
 int main()
 {
@@ -1693,21 +1695,25 @@ NULL};
 "worth But trust me on the sunscreen"
 };
       int i;
-      int y;
+      int result = 0;
 
-      for(y = 0; y < 50; ++y)
-      {
       for (i = 0; find_strings[i]; i++)
       {
+            result += i;
             init_search(find_strings[i]);
             here = strsearch(search_strings[i]);
-            printf("\"%s\" is%s in \"%s\"", find_strings[i],
-                  here ? "" : " not", search_strings[i]);
-            if (here)
-                  printf(" [\"%s\"]", here);
-            printf("\n");
+            if (here) {
+              result ^= 0xaaaaaaaa;
+            } else {
+              result ^= 0x55555555;
+            }            
       }
-      }
+      
+      #ifndef FISOC
+      printf("result: %d\n", result);
+      #else
+      *(volatile int *)(0x180000) = result;
+      #endif
 
       return 0;
 }
