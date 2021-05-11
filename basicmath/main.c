@@ -34,14 +34,6 @@ int main(void)
 /*    printf(" %f",x[i]);*/
     result += x[i];
     
-  #ifndef FISOC
-  printf("result: %f\n", result);
-  #else
-  *(volatile double *)(0x180000) = result;
-  #endif
-  
-  return 0;    
-    
 /*  printf("\n\r");*/
   /* should get 1 solution: 2.5           */
   SolveCubic(a2, b2, c2, d2, &solutions, x);  
@@ -79,6 +71,12 @@ int main(void)
       }
     }
   }
+  
+  #ifndef FISOC
+  printf("result: %f\n", result);
+  #else
+  *(volatile double *)(0x180000) = result;
+  #endif    
 
 
   
