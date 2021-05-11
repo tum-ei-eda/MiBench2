@@ -16,7 +16,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifndef FISOC
 #include <stdio.h>
+#endif
 #include "blowfish.h"
 #include "../bareBench.h"
 #include "input.h"
@@ -27,40 +29,45 @@ int main(void) {
   unsigned long L = 1, R = 2;
   BLOWFISH_CTX ctx;
 
-  Blowfish_Init (&ctx, (unsigned char*)"TESTKEY", 7);
-
-  Blowfish_Encrypt(&ctx, &L, &R);
-  printf("%08lX %08lX\n", L, R);
-  if (L == 0xDF333FD2L && R == 0x30A71BB4L)
-	  printf("Test encryption OK.\n");
-  else
-	  printf("Test encryption failed.\n");
-
-  Blowfish_Decrypt(&ctx, &L, &R);
-  if (L == 1 && R == 2)
-  	  printf("Test decryption OK.\n");
-  else
-	  printf("Test decryption failed.\n");
-    
+  #ifndef FISOC
   printf("Encrypt message\n");
+  #endif
   Blowfish_Init (&ctx, KEY, sizeof(KEY));
 
   unsigned long * plaintextPtr = (unsigned long *)test_data;
+  long result = 0;
   while(plaintextPtr < (unsigned long *)(test_data + sizeof(test_data))) {
       Blowfish_Encrypt(&ctx, &plaintextPtr[0], &plaintextPtr[1]);
-      printf("%08lX %08lX\n", plaintextPtr[0], plaintextPtr[1]);
+//      printf("%08lX %08lX\n", plaintextPtr[0], plaintextPtr[1]);
+      result ^= plaintextPtr[0];
+      result ^= plaintextPtr[1];
       plaintextPtr += 2;
   }
+  #ifndef FISOC
+  printf("%08lx\n", result);
+  #else
+  *(volatile long *)(0x180000) = result;
+  #endif
 
+  #ifndef FISOC
   printf("Decrypt message\n");
+  #endif
   Blowfish_Init (&ctx, KEY, sizeof(KEY));
     
+  result = 0;
   plaintextPtr = (unsigned long *)test_data;
   while(plaintextPtr < (unsigned long *)(test_data + sizeof(test_data))) {
       Blowfish_Decrypt(&ctx, &plaintextPtr[0], &plaintextPtr[1]);
-      printf("%08lX %08lX\n", plaintextPtr[0], plaintextPtr[1]);
+//      printf("%08lX %08lX\n", plaintextPtr[0], plaintextPtr[1]);
+      result ^= plaintextPtr[0];
+      result ^= plaintextPtr[1];
       plaintextPtr += 2;
   }
+  #ifndef FISOC
+  printf("%08lx\n", result);
+  #else
+  *(volatile long *)(0x180004) = result;
+  #endif
     
   return 0;
 }
