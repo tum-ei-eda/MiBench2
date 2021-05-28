@@ -7,7 +7,7 @@
 #endif
 
 
-#define NUM_NODES                          10
+#define NUM_NODES                          25
 #define NONE                               9999
 
 struct _NODE
@@ -26,7 +26,7 @@ struct _QITEM
 };
 typedef struct _QITEM QITEM;
 
-QITEM allocated[1000];
+QITEM allocated[10000];
 QITEM *qHead = NULL;
 
 int g_qCount = 0;
