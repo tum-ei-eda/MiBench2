@@ -7,7 +7,7 @@
 #endif
 
 
-#define NUM_NODES                          25
+#define NUM_NODES                          10
 #define NONE                               9999
 
 struct _NODE
@@ -26,7 +26,7 @@ struct _QITEM
 };
 typedef struct _QITEM QITEM;
 
-QITEM allocated[10000];
+QITEM allocated[250];
 QITEM *qHead = NULL;
 
 int g_qCount = 0;
@@ -142,21 +142,23 @@ int dijkstra(int chStart, int chEnd)
 
 int main(int argc, char *argv[]) {
   int i,j;
+  unsigned addr = 0x180000;
 
    /* make a fully connected matrix */
    // see input.h
   /* finds 10 shortest paths between nodes */
-  int result = 0;
+
   for (i=0,j=NUM_NODES/2;i<NUM_NODES;i++,j++) {
 			j=j%NUM_NODES;
-      result ^= dijkstra(i,j);
-  }
+			int result = dijkstra(i,j);
 
-  #ifndef FISOC
-  printf("%d\n", result);
-  #else
-  *(volatile int *)(0x180000) = result;
-  #endif
+      #ifndef FISOC
+      printf("%x\n", result);
+      #else
+      *(volatile int *)(addr) = result;
+      addr += 4;
+      #endif
+  }
   
   return 0;
 }

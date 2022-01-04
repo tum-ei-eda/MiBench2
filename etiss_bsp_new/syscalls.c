@@ -143,7 +143,6 @@ int _gettimeofday(struct timeval *tp, void *tzp)
     return 0;
 }
 
-
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4,
                                 unsigned int a5, unsigned int a6, unsigned int a7)
@@ -229,9 +228,8 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
 #ifdef DEBUG_SYSTEM
         printf_fromisr("Unhandled cause code %i from %08X\n", mcause, mepc);
 #endif
-//        while (1)
-//            ;
-        _exit_(0);
+        while (1)
+            ;
     }
 
     return ecall_result;

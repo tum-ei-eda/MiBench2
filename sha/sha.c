@@ -260,21 +260,17 @@ void sha_final(SHA_INFO *sha_info) {
 
 /* compute the SHA digest of a FILE stream */
 
-#define BLOCK_SIZE 8192
+#define BLOCK_SIZE 1024
 
 void sha_stream(SHA_INFO *sha_info, char *fin) {
   int i = 0;
   BYTE data[BLOCK_SIZE];
-
-  sha_init(sha_info);
-
-  unsigned addr = 0x180000;
-
-  while ((data[0] = fin[i]) != '\0') {
-    sha_update(sha_info, data, 1);
-    ++i;
+  for (i = 0; i < BLOCK_SIZE; ++i) {
+    data[i] = fin[i];
   }
 
+  sha_init(sha_info);
+  sha_update(sha_info, data, BLOCK_SIZE);
   sha_final(sha_info);
 }
 
@@ -291,7 +287,7 @@ void sha_print(SHA_INFO *sha_info) {
   }
 
 #ifndef FISOC
-  printf("%x\n", result);
+  printf("%llx\n", result);
 #else
   *(volatile LONG *)(0x180000) = result;
 #endif

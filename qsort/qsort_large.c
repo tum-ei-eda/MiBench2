@@ -163,7 +163,7 @@ main(void) {
   }
   
   #ifndef FISOC
-  printf("result: %d\n", result);
+  printf("result: %x\n", result);
   #else
   *(volatile int *)(0x180000) = result;
   #endif

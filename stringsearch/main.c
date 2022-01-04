@@ -1697,20 +1697,21 @@ NULL};
       int i;
       int result = 0;
 
-      for (i = 0; find_strings[i]; i++)
+      for (i = 0; i<25/*find_strings[i]*/; i++)
       {
             result += i;
             init_search(find_strings[i]);
             here = strsearch(search_strings[i]);
             if (here) {
-              result ^= 0xaaaaaaaa;
+              result++;
+              result ^= i;
             } else {
-              result ^= 0x55555555;
-            }            
+              result--;
+              result ^= i;
+            }
       }
-      
       #ifndef FISOC
-      printf("result: %d\n", result);
+      printf("result: %x\n", result);
       #else
       *(volatile int *)(0x180000) = result;
       #endif

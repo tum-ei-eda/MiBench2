@@ -28,17 +28,16 @@ int CDECL bit_count(long x)
 
 int main()
 {
-  unsigned iterations = 10000;
+  unsigned iterations = 100;
   long n = 0xDEADBEEF;
   
   int result = 0;
   for (int i=0; i<iterations; ++i) {
-    result += i;
-    result ^= bit_count(n);
+    result += bit_count(n * i);
   }
   
   #ifndef FISOC
-  printf("result: %d\n", result);
+  printf("result: %x\n", result);
   #else
   *(volatile int *)(0x180000) = result;
   #endif
